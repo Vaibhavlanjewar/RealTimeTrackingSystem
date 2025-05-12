@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> SGGS Vehicle Tracker Dashboard</title>
+    <title>SGGS Vehicle Tracker Dashboard</title>
 
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -22,9 +22,12 @@
       }
       #map {
         height: 60vh;
+        width: 100%;
+        min-height: 400px;
         border-radius: 12px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         z-index: 1;
+        background-color: #e5e7eb;
       }
       .toggle-switch {
         position: relative;
@@ -92,623 +95,218 @@
         border-radius: 2px;
       }
 
-      /* about-faq-contact us -footer */
-      .section {
-        padding: 50px 20px;
-      }
-
-      .nav-link {
-        cursor: pointer;
-      }
-
-      .footer {
-        background-color: #1c3d5c;
+      /* Alert styles */
+      .alert {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 24px;
+        border-radius: 8px;
         color: white;
-        padding: 20px 0;
-        text-align: center;
+        font-weight: 500;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        animation: slide-down 0.5s ease-out;
+      }
+      .alert-success {
+        background-color: #34a853;
+      }
+      .alert-warning {
+        background-color: #fbbc05;
+      }
+      .alert-error {
+        background-color: #ea4335;
       }
 
-      .footer a {
-        color: #f3d1a2;
-        background-color: #305ca4;
-      }
-
-      @media (max-width: 768px) {
-        #map {
-          height: 50vh;
-        }
-      }
-     
-      @keyframes pulse {
+      @keyframes slide-down {
         0% {
-          transform: translateX(-50%) scale(1);
-        }
-        50% {
-          transform: translateX(-50%) scale(1.05);
+          transform: translate(-50%, -40px);
+          opacity: 0;
         }
         100% {
-          transform: translateX(-50%) scale(1);
-        }
-      }
-     
-      @keyframes shake {
-        from {
-          transform: rotate(-10deg);
-        }
-        to {
-          transform: rotate(10deg);
+          transform: translate(-50%, 0);
+          opacity: 1;
         }
       }
     </style>
   </head>
   <body class="bg-gray-50 min-h-screen">
     <!-- Navbar -->
-     <nav class="gradient-bg text-white shadow-lg">
-    <div class="container mx-auto px-4 py-3">
-      <div class="flex justify-between items-center">
-        <!-- Logo/Brand -->
-        <div class="flex items-center space-x-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <span class="text-xl font-bold">SGGS Vehicle Tracker</span>
-        </div>
-
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-6">
-          <!-- Dropdown Menu -->
-          <div class="relative group">
-            <button class="flex items-center space-x-1 text-white hover:text-yellow-300 transition-colors">
-              <span>Menu</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <a href="#about" class="block px-4 py-2 text-gray-800 hover:bg-blue-50">About Us</a>
-              <a href="#faq" class="block px-4 py-2 text-gray-800 hover:bg-blue-50">FAQ</a>
-              <a href="#contact" class="block px-4 py-2 text-gray-800 hover:bg-blue-50">Contact Us</a>
-            </div>
+    <nav class="gradient-bg text-white shadow-lg">
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <!-- Logo/Brand -->
+          <div class="flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="text-xl font-bold">SGGS Vehicle Tracker</span>
           </div>
 
-        <!-- Call Alert Toggle -->
-<div class="flex items-center space-x-2">
-  <span class="text-sm hidden sm:inline">Enable Call</span>
-  <label class="toggle-switch">
-    <input type="checkbox" id="call-toggle" />
-    <span class="slider"></span>
-  </label>
-</div>
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-6">
+            <!-- Call Alert Toggle -->
+            <div class="flex items-center space-x-2">
+              <span class="text-sm hidden sm:inline">Enable Call</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="call-toggle" />
+                <span class="slider"></span>
+              </label>
+            </div>
 
-<!-- SMS Alert Toggle -->
-<div class="flex items-center space-x-2">
-  <span class="text-sm hidden sm:inline">Enable SMS</span>
-  <label class="toggle-switch">
-    <input type="checkbox" id="sms-toggle" />
-    <span class="slider"></span>
-  </label>
-</div>
+            <!-- SMS Alert Toggle -->
+            <div class="flex items-center space-x-2">
+              <span class="text-sm hidden sm:inline">Enable SMS</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="sms-toggle" />
+                <span class="slider"></span>
+              </label>
+            </div>
 
+            <!-- Logout Button -->
+            <button onclick="logout()"
+             class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out">
+             Logout
+            </button>
+          </div>
 
-          <!-- Logout Button -->
-          <button onclick="logout()"
-           class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out">
-           Logout
+          <!-- Mobile Menu Button -->
+          <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
           </button>
-
         </div>
-
-        <!-- Mobile Menu Button -->
-<button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
-  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M4 6h16M4 12h16M4 18h16"></path>
-  </svg>
-</button>
-
-<!-- Mobile Menu -->
-<div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 bg-blue-800 rounded-lg shadow-md">
-  <div class="flex flex-col space-y-3 px-4 pt-4">
-    <a href="#about" class="text-white hover:bg-blue-600 px-3 py-2 rounded">About Us</a>
-    <a href="#faq" class="text-white hover:bg-blue-600 px-3 py-2 rounded">FAQ</a>
-    <a href="#contact" class="text-white hover:bg-blue-600 px-3 py-2 rounded">Contact Us</a>
-
-    <div class="flex items-center justify-between pt-3 mt-3 border-t border-blue-400">
-      <span class="text-white">Enable Call</span>
-      <label class="toggle-switch">
-        <input type="checkbox" id="mobile-call-toggle" />
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <div class="flex items-center justify-between mt-2">
-      <span class="text-white">Enable SMS</span>
-      <label class="toggle-switch">
-        <input type="checkbox" id="mobile-sms-toggle" />
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md text-white mt-4">
-      Logout
-    </button>
-  </div>
-</div>
-
-  
-      <script>
-  // Mobile menu toggle
-  const mobileMenuButton = document.getElementById('mobile-menu-button');
-  const mobileMenu = document.getElementById('mobile-menu');
-
-  mobileMenuButton.addEventListener('click', function () {
-    mobileMenu.classList.toggle('hidden');
-  });
-
-  // Sync toggle switches between mobile and desktop
-  const desktopCallToggle = document.getElementById('call-toggle');
-  const desktopSMSToggle = document.getElementById('sms-toggle');
-  const mobileCallToggle = document.getElementById('mobile-call-toggle');
-  const mobileSMSToggle = document.getElementById('mobile-sms-toggle');
-
-  // Sync Call toggle
-  if (desktopCallToggle && mobileCallToggle) {
-    desktopCallToggle.addEventListener('change', function () {
-      mobileCallToggle.checked = this.checked;
-    });
-
-    mobileCallToggle.addEventListener('change', function () {
-      desktopCallToggle.checked = this.checked;
-    });
-  }
-
-  // Sync SMS toggle
-  if (desktopSMSToggle && mobileSMSToggle) {
-    desktopSMSToggle.addEventListener('change', function () {
-      mobileSMSToggle.checked = this.checked;
-    });
-
-    mobileSMSToggle.addEventListener('change', function () {
-      desktopSMSToggle.checked = this.checked;
-    });
-  }
-
-  function logout() {
-    // Your existing logout functionality
-    console.log('Logout clicked');
-  }
-</script>
-
+      </div>
     </nav>
 
-    <!-- Navbar end -->
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Map Section -->
+        <div class="lg:col-span-2">
+          <h2 class="text-xl font-bold mb-4 text-gray-800">
+            Live Vehicle Tracking
+          </h2>
+          <div id="map"></div>
+        </div>
 
-<!--     vehicle tracking info  -->
-<!-- Main Content -->
-<div class="container mx-auto px-4 py-6">
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Map Section -->
-    <div class="lg:col-span-2">
-      <h2 class="text-xl font-bold mb-4 text-gray-800">
-        Live Vehicle Tracking
-      </h2>
-      <div id="map" class="h-96 bg-gray-100 rounded-md shadow-inner"></div>
-    </div>
+        <!-- Vehicle Info Section -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <h2 class="text-xl font-bold mb-4 text-gray-800">Vehicle Information</h2>
+          <div id="vehicles">
+            <div class="animate-pulse flex space-x-4">
+              <div class="flex-1 space-y-4 py-1">
+                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div class="space-y-2">
+                  <div class="h-4 bg-gray-200 rounded"></div>
+                  <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    <!-- Vehicle Info Section -->
-    <div class="bg-white rounded-xl shadow-md p-6">
-      <h2 class="text-xl font-bold mb-4 text-gray-800">Vehicle Information</h2>
-      <div id="vehicles" class="space-y-4">
-        <div class="animate-pulse flex space-x-4">
-          <div class="flex-1 space-y-4 py-1">
-            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div class="space-y-2">
-              <div class="h-4 bg-gray-200 rounded"></div>
-              <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+          <div class="mt-6">
+            <h3 class="font-semibold mb-2 text-gray-700">Status</h3>
+            <div class="flex items-center">
+              <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div>
+              <span class="text-sm">Connecting to vehicle...</span>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="mt-6">
-        <h3 class="font-semibold mb-2 text-gray-700">Status</h3>
-        <div class="flex items-center">
-          <div class="h-2.5 w-2.5 rounded-full bg-yellow-500 mr-2"></div>
-          <span class="text-sm">Connecting to vehicle...</span>
-        </div>
-      </div>
     </div>
-  </div>
-</div>
 
-
-
-
-
-<!-- Slide-down animation -->
-<style>
-  @keyframes slide-down {
-    0% {
-      transform: translate(-50%, -40px);
-      opacity: 0;
-    }
-    100% {
-      transform: translate(-50%, 0);
-      opacity: 1;
-    }
-  }
-
-  .animate-slide-down {
-    animation: slide-down 0.5s ease-out;
-  }
-</style>
-
-
-<!--  ------------------------>
-
-<!-- About Us Section -->
-<section id="about" class="section bg-white shadow-lg rounded-2xl mx-4 mt-8 p-8">
-  <div class="container mx-auto">
-    <h2 class="text-3xl font-bold text-center text-blue-700">About Us</h2>
-    <p class="mt-6 text-gray-700 leading-7 text-lg text-center">
-      Welcome to the Vehicle Tracking System! Our goal is to enhance the daily commute experience
-      for SGGSIE&T students and staff by offering a reliable real-time bus tracking solution.
-    </p>
-    <div class="mt-6">
-      <ul class="list-disc pl-6 text-gray-700 space-y-3 text-lg">
-        <li><strong>Time Optimization:</strong> Accurate ETAs to plan your journey better.</li>
-        <li><strong>Attendance:</strong> Ensures you reach on time for classes and events.</li>
-        <li><strong>Smart Alerts:</strong> Instant updates via SMS or Call for approaching buses.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- Why SGGS Vehicle Tracker -->
-<section class="bg-white shadow-lg rounded-2xl mx-4 mt-10 p-8 text-center">
-  <div class="container mx-auto max-w-3xl">
-    <h2 class="text-3xl font-bold text-blue-700">Why SGGS Vehicle Tracker?</h2>
-    <p class="mt-6 text-gray-700 text-lg leading-7">
-      SGGS Vehicle Tracker is tailored to ease campus transportation. With real-time GPS tracking,
-      proactive SMS/Call alerts, and a mobile-friendly dashboard, it eliminates uncertainty and saves time.
-      Whether you're a student rushing for lectures or staff heading to a meeting—stay informed and punctual.
-    </p>
-  </div>
-</section>
-
-<!-- FAQ Section -->
-<section id="faq" class="bg-white shadow-lg rounded-2xl mx-4 mt-10 p-8">
-  <div class="container mx-auto max-w-3xl">
-    <h2 class="text-3xl font-bold text-center text-blue-700">Frequently Asked Questions (FAQ)</h2>
-    <div class="mt-6 divide-y divide-gray-300">
-      <!-- Q1 -->
-      <div class="py-5">
-        <button onclick="toggleFAQ(0)" class="w-full flex justify-between items-center text-left text-blue-700 font-semibold text-xl focus:outline-none">
-          <span>How can I track the bus in real-time?</span>
-          <span class="text-2xl">+</span>
-        </button>
-        <p class="faq-answer hidden mt-3 text-gray-700 text-lg">
-          Login to your dashboard to view a live map with the bus's current location and ETA.
-        </p>
-      </div>
-      <!-- Q2 -->
-      <div class="py-5">
-        <button onclick="toggleFAQ(1)" class="w-full flex justify-between items-center text-left text-blue-700 font-semibold text-xl focus:outline-none">
-          <span>How do I get notifications like SMS or Call?</span>
-          <span class="text-2xl">+</span>
-        </button>
-        <p class="faq-answer hidden mt-3 text-gray-700 text-lg">
-          Enable alerts using the toggle button on the top navigation bar and select SMS/Call as preferred mode.
-        </p>
-      </div>
-      <!-- Q3 -->
-      <div class="py-5">
-        <button onclick="toggleFAQ(2)" class="w-full flex justify-between items-center text-left text-blue-700 font-semibold text-xl focus:outline-none">
-          <span>How do notifications work?</span>
-          <span class="text-2xl">+</span>
-        </button>
-        <p class="faq-answer hidden mt-3 text-gray-700 text-lg">
-          You’ll automatically receive a Call or SMS when the bus is within 300 m of your location (if enabled).
-        </p>
-      </div>
-      <!-- Q4 -->
-      <div class="py-5">
-        <button onclick="toggleFAQ(3)" class="w-full flex justify-between items-center text-left text-blue-700 font-semibold text-xl focus:outline-none">
-          <span>Can I track more than one bus?</span>
-          <span class="text-2xl">+</span>
-        </button>
-        <p class="faq-answer hidden mt-3 text-gray-700 text-lg">
-          No, the system currently supports tracking only one assigned bus at a time.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ Toggle Script -->
-<script>
-  function toggleFAQ(index) {
-    const answers = document.querySelectorAll('.faq-answer');
-    const icons = document.querySelectorAll('#faq button span:last-child');
-    answers.forEach((answer, i) => {
-      if (i === index) {
-        answer.classList.toggle('hidden');
-        icons[i].textContent = answer.classList.contains('hidden') ? '+' : '−';
-      } else {
-        answer.classList.add('hidden');
-        icons[i].textContent = '+';
-      }
-    });
-  }
-</script>
-
-<!-- Contact Us Section -->
-<section id="contact" class="section bg-white shadow-lg rounded-2xl mx-4 mt-10 p-8">
-  <div class="container mx-auto">
-    <h2 class="text-3xl font-bold text-center text-blue-700">Contact Us</h2>
-    <p class="mt-6 text-gray-700 leading-7 text-lg text-center">
-      Need help? Reach out to us using any method below — we’re here to support your journey.
-    </p>
-    <div class="mt-6 space-y-4 text-gray-700 text-lg">
-      <p><strong>Email:</strong> <a href="mailto:support@vehicletrackingsystem.com" class="text-blue-600">support@vehicletrackingsystem.com</a></p>
-      <p><strong>Phone:</strong>
-        <a href="tel:+912462269161" class="text-blue-600">+91-2462-269161 (Registrar)</a>,
-        <a href="tel:+912462269162" class="text-blue-600">162 (Office Supdt.)</a>,
-        <a href="tel:+912462229236" class="text-blue-600">229236 (FAX)</a>,
-        <a href="tel:+912462229234" class="text-blue-600">229234</a>,
-        <a href="tel:+912462269102" class="text-blue-600">269102 (PA to Director)</a>
-      </p>
-      <p><strong>Address:</strong> SGGSIE&T, Vishnupuri, Nanded, Maharashtra 431606, India</p>
-    </div>
-  </div>
-</section>
-
-<!--     footer  -->
-<footer class="footer bg-gray-100 text-center py-6 mt-10 text-gray-600">
-  <p>&copy; 2025 Vehicle Tracking System. All Rights Reserved.</p>
-  
-  <!-- SGGSIE&T Website Link without color change or background -->
-  <p>
-    <a href="https://www.sggs.ac.in/" class="font-medium" target="_blank">Visit SGGSIE&T Website</a>
-  </p>
-  
-  <!-- GitHub Icon and Link without color change or background -->
-  <p class="flex justify-center items-center space-x-3 mt-4">
-    <a href="https://github.com/Vaibhavlanjewar/RealTimeTrackingSystem" target="_blank" class="flex items-center">
-      <img src="https://img.icons8.com/ios-filled/50/000000/github.png" alt="GitHub" class="w-6 h-6 inline-block" />
-      <span class="ml-2">GitHub Repository</span>
-    </a>
-  </p>
-</footer>
-
-
-
-
-
-  <script>
-  // Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyCPoo_6Y-XB69FM_qrIjErVADmnaZeG3-4",
-    authDomain: "real-time-vehicle-tracki-a83e6.firebaseapp.com",
-    databaseURL: "https://real-time-vehicle-tracki-a83e6-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "real-time-vehicle-tracki-a83e6",
-    storageBucket: "real-time-vehicle-tracki-a83e6.appspot.com",
-    messagingSenderId: "665050789863",
-    appId: "1:665050789863:web:719d1311c6a71ed1c16f42"
-  };
-  firebase.initializeApp(firebaseConfig);
-
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      const userId = user.uid;
-
-      // Toggle elements (Corrected to match HTML IDs)
-      const desktopCallToggle = document.getElementById("call-toggle");  // Corrected ID
-      const desktopSMSToggle = document.getElementById("sms-toggle");
-      const mobileCallToggle = document.getElementById("mobile-call-toggle");  // Corrected ID
-      const mobileSMSToggle = document.getElementById("mobile-sms-toggle");
-
-      // Disable all toggles initially
-      if (desktopCallToggle) desktopCallToggle.disabled = true;
-      if (mobileCallToggle) mobileCallToggle.disabled = true;
-      if (desktopSMSToggle) desktopSMSToggle.disabled = true;
-      if (mobileSMSToggle) mobileSMSToggle.disabled = true;
-
-      // Fetch values from DB
-      firebase.database().ref("users/" + userId).once("value").then(snapshot => {
-        const data = snapshot.val() || {};
-
-        const callEnabled = data.enable_call === true;
-        const smsEnabled = data.enable_sms === true;
-
-        // Set and enable toggles
-        if (desktopCallToggle) {
-          desktopCallToggle.checked = callEnabled;
-          desktopCallToggle.disabled = false;
-        }
-        if (mobileCallToggle) {
-          mobileCallToggle.checked = callEnabled;
-          mobileCallToggle.disabled = false;
-        }
-        if (desktopSMSToggle) {
-          desktopSMSToggle.checked = smsEnabled;
-          desktopSMSToggle.disabled = false;
-        }
-        if (mobileSMSToggle) {
-          mobileSMSToggle.checked = smsEnabled;
-          mobileSMSToggle.disabled = false;
-        }
-      });
-
-      // Sync Call toggles
-      if (desktopCallToggle && mobileCallToggle) {
-        desktopCallToggle.addEventListener("change", function () {
-          const isEnabled = this.checked;
-          mobileCallToggle.checked = isEnabled;
-          updateFirebaseToggle(userId, "enable_call", isEnabled);  // Key for call
-        });
-
-        mobileCallToggle.addEventListener("change", function () {
-          const isEnabled = this.checked;
-          desktopCallToggle.checked = isEnabled;
-          updateFirebaseToggle(userId, "enable_call", isEnabled);  // Key for call
-        });
-      }
-
-      // Sync SMS toggles
-      if (desktopSMSToggle && mobileSMSToggle) {
-        desktopSMSToggle.addEventListener("change", function () {
-          const isEnabled = this.checked;
-          mobileSMSToggle.checked = isEnabled;
-          updateFirebaseToggle(userId, "enable_sms", isEnabled);  // Key for SMS
-        });
-
-        mobileSMSToggle.addEventListener("change", function () {
-          const isEnabled = this.checked;
-          desktopSMSToggle.checked = isEnabled;
-          updateFirebaseToggle(userId, "enable_sms", isEnabled);  // Key for SMS
-        });
-      }
-
-      function updateFirebaseToggle(userId, key, value) {
-        firebase.database().ref("users/" + userId).update({
-          [key]: value
-        });
-
-        showAlert(
-          ${key === "enable_call" ? "Call" : "SMS"} Alerts ${value ? "enabled" : "disabled"},
-          value ? "success" : "warning"
-        );
-      }
-
-      // Online tracking
-      firebase.database().ref("users/" + userId + "/online").set(true);
-      window.addEventListener("beforeunload", function () {
-        firebase.database().ref("users/" + userId + "/online").set(false);
-      });
-    }
-  });
-
+    <script>
+      // Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyCPoo_6Y-XB69FM_qrIjErVADmnaZeG3-4",
+        authDomain: "real-time-vehicle-tracki-a83e6.firebaseapp.com",
+        databaseURL: "https://real-time-vehicle-tracki-a83e6-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "real-time-vehicle-tracki-a83e6",
+        storageBucket: "real-time-vehicle-tracki-a83e6.appspot.com",
+        messagingSenderId: "665050789863",
+        appId: "1:665050789863:web:719d1311c6a71ed1c16f42"
+      };
+      
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
       const db = firebase.database();
-      const vehicleRef = db.ref("vehicle/gps");
-      let map,
-        userMarker,
-        userLat,
-        userLng,
-        vehicleMarker,
-        line;
-
-      // Initialize map with default view
-      map = L.map("map").setView([0, 0], 15);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 18,
-      }).addTo(map);
-
-      // Custom markers
-      const userIcon = L.divIcon({
-        className: "user-marker",
-        html: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>',
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-      });
-
-      const vehicleIcon = L.divIcon({
-        className: "vehicle-marker",
-        html: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1v-1h.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1v-2a1 1 0 00-.293-.707l-3-3A1 1 0 0016 7h-1V5a1 1 0 00-1-1H3z" /></svg>',
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-      });
-
-      // Add user marker with default position
-      userMarker = L.marker([0, 0], { icon: userIcon })
-        .addTo(map)
-        .bindPopup("Your location");
-
-      // Add vehicle marker with default position
-      vehicleMarker = L.marker([0, 0], { icon: vehicleIcon, opacity: 0 })
-        .addTo(map)
-        .bindPopup("Vehicle location");
-
-      // Get real-time location using Geolocation API
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          userLat = position.coords.latitude;
-          userLng = position.coords.longitude;
-
-          // Update user marker and center map
-          userMarker.setLatLng([userLat, userLng]);
-          map.setView([userLat, userLng], 15);
-
-          // Start listening to vehicle updates
-          startVehicleListener();
-
-          // Start continuous tracking
-          navigator.geolocation.watchPosition(
-            updateUserLocation,
-            handleLocationError
-          );
-        }, handleLocationError);
-      } else {
-        showAlert("Geolocation is not supported by your browser", "error");
+      
+      // Default coordinates (SGGS location)
+      const defaultLat = 19.1386;
+      const defaultLng = 77.3216;
+      
+      // Map and markers variables
+      let map, userMarker, vehicleMarker, line;
+      let userLat = defaultLat;
+      let userLng = defaultLng;
+      
+      // Initialize the map
+      function initMap() {
+        map = L.map('map').setView([userLat, userLng], 15);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+        }).addTo(map);
+        
+        // Custom markers
+        const userIcon = L.divIcon({
+          className: "user-marker",
+          html: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>',
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
+        });
+        
+        const vehicleIcon = L.divIcon({
+          className: "vehicle-marker",
+          html: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1v-1h.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1v-2a1 1 0 00-.293-.707l-3-3A1 1 0 0016 7h-1V5a1 1 0 00-1-1H3z" /></svg>',
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
+        });
+        
+        // Create markers
+        userMarker = L.marker([userLat, userLng], { icon: userIcon })
+          .addTo(map)
+          .bindPopup("Your location");
+        
+        vehicleMarker = L.marker([userLat, userLng], { 
+          icon: vehicleIcon,
+          opacity: 0
+        }).addTo(map);
+        
+        // Start listening for vehicle updates
+        startVehicleListener();
       }
-
-      function updateUserLocation(position) {
-        userLat = position.coords.latitude;
-        userLng = position.coords.longitude;
-        if (userMarker) {
-          userMarker.setLatLng([userLat, userLng]);
-        }
-      }
-
-      function handleLocationError(error) {
-        let message = "Error getting your location: ";
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            message += "User denied the request for Geolocation.";
-            break;
-          case error.POSITION_UNAVAILABLE:
-            message += "Location information is unavailable.";
-            break;
-          case error.TIMEOUT:
-            message += "The request to get user location timed out.";
-            break;
-          case error.UNKNOWN_ERROR:
-            message += "An unknown error occurred.";
-            break;
-        }
-        showAlert(message, "error");
-      }
-
-      async function reverseGeocode(lat, lng) {
-        const url = https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng};
-        try {
-          const response = await fetch(url);
-          const data = await response.json();
-          return data.display_name || "Unknown location";
-        } catch (error) {
-          console.error("Reverse geocoding failed:", error);
-          return "Unknown location";
-        }
-      }
-
+      
+      // Start listening to vehicle position updates
       function startVehicleListener() {
+        const vehicleRef = db.ref("vehicle/gps");
+        
         vehicleRef.on("value", async (snapshot) => {
           const data = snapshot.val();
-          if (!data) return;
-
+          console.log("Vehicle data received:", data);
+          
+          if (!data || !data.latitude || !data.longitude) {
+            console.error("Invalid vehicle data received");
+            showAlert("Vehicle data not available", "error");
+            return;
+          }
+          
           const busLat = data.latitude;
           const busLng = data.longitude;
-
-          // Make vehicle marker visible
-          vehicleMarker.setOpacity(1);
+          
+          // Update vehicle marker
           vehicleMarker.setLatLng([busLat, busLng]);
-
+          vehicleMarker.setOpacity(1);
+          
           // Remove old line if exists
           if (line) map.removeLayer(line);
-
+          
           // Draw line between user and vehicle
           line = L.polyline(
             [
@@ -721,28 +319,32 @@
               dashArray: "5, 5",
             }
           ).addTo(map);
-
+          
           // Calculate distance and ETA
-          const distance = getDistanceFromLatLonInKm(
-            userLat,
-            userLng,
-            busLat,
-            busLng
-          );
+          const distance = getDistanceFromLatLonInKm(userLat, userLng, busLat, busLng);
           const speedKmph = 30; // Assume average speed of 30 km/h
           const timeInHours = distance / speedKmph;
           const totalSeconds = Math.round(timeInHours * 3600);
           const minutes = Math.floor(totalSeconds / 60);
           const seconds = totalSeconds % 60;
-
+          
           // Get location names
           const [userLocation, busLocation] = await Promise.all([
             reverseGeocode(userLat, userLng),
             reverseGeocode(busLat, busLng),
           ]);
-
-          // Update vehicle info panel with scrollable address cards
-          document.getElementById("vehicles").innerHTML = `
+          
+          // Update vehicle info panel
+          updateVehicleInfo(distance, minutes, seconds, userLocation, busLocation);
+          
+          // Update status indicator
+          updateStatusIndicator(distance);
+        });
+      }
+      
+      // Update vehicle information display
+      function updateVehicleInfo(distance, minutes, seconds, userLocation, busLocation) {
+        document.getElementById("vehicles").innerHTML = `
           <div class="flex items-start space-x-3">
             <div class="bg-blue-100 p-2 rounded-full">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
@@ -794,23 +396,38 @@
             </div>
           </div>
         `;
-
-          // Update status indicator
-          const statusElement = document.querySelector(".h-2.5");
-          if (distance < 2) {
-            statusElement.classList.remove("bg-yellow-500");
-            statusElement.classList.add("bg-green-500");
-            document.querySelector(".h-2.5 + span").textContent =
-              "Vehicle nearby";
-          } else {
-            statusElement.classList.remove("bg-green-500");
-            statusElement.classList.add("bg-yellow-500");
-            document.querySelector(".h-2.5 + span").textContent =
-              "Vehicle in transit";
-          }
-        });
       }
-
+      
+      // Update status indicator
+      function updateStatusIndicator(distance) {
+        const statusElement = document.querySelector(".h-2.5");
+        const statusText = document.querySelector(".h-2.5 + span");
+        
+        if (distance < 2) {
+          statusElement.classList.remove("bg-yellow-500");
+          statusElement.classList.add("bg-green-500");
+          statusText.textContent = "Vehicle nearby";
+        } else {
+          statusElement.classList.remove("bg-green-500");
+          statusElement.classList.add("bg-yellow-500");
+          statusText.textContent = "Vehicle in transit";
+        }
+      }
+      
+      // Reverse geocode coordinates to address
+      async function reverseGeocode(lat, lng) {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          return data.display_name || "Unknown location";
+        } catch (error) {
+          console.error("Reverse geocoding failed:", error);
+          return "Unknown location";
+        }
+      }
+      
+      // Calculate distance between two coordinates
       function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
         const R = 6371; // Radius of the Earth in km
         const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -824,23 +441,49 @@
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c; // Distance in km
       }
-
-  
-      function logout() {
-        const user = firebase.auth().currentUser;
-        if (user) {
-          const userId = user.uid;
-          firebase.database().ref('users/' + userId).update({ 
-            online: false,
-            notified: false
-          })
-          .then(() => {
-            firebase.auth().signOut().then(() => {
-              window.location.href = "login.html"; // or your login page
-            });
-          });
-        }
+      
+      // Show alert message
+      function showAlert(message, type) {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.textContent = message;
+        document.body.appendChild(alert);
+        
+        setTimeout(() => {
+          alert.remove();
+        }, 3000);
       }
+      
+      // Logout function
+      function logout() {
+        firebase.auth().signOut().then(() => {
+          window.location.href = "login.html";
+        }).catch((error) => {
+          console.error("Logout error:", error);
+          showAlert("Logout failed", "error");
+        });
+      }
+      
+      // Initialize the application when DOM is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        // Initialize the map
+        initMap();
+        
+        // Try to get user's current location
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            userLat = position.coords.latitude;
+            userLng = position.coords.longitude;
+            userMarker.setLatLng([userLat, userLng]);
+            map.setView([userLat, userLng], 15);
+          }, (error) => {
+            console.warn("Geolocation failed, using default location");
+            showAlert("Using default location - enable geolocation for better accuracy", "warning");
+          });
+        } else {
+          showAlert("Geolocation is not supported by your browser", "error");
+        }
+      });
     </script>
   </body>
 </html>
