@@ -191,23 +191,13 @@
           </div>
 
           <!-- Alerts Toggle -->
-        <div class="flex items-center space-x-4">
-  <div class="flex items-center space-x-2">
-    <span class="text-sm hidden sm:inline">Enable Call </span>
-    <label class="toggle-switch">
-      <input type="checkbox" id="call-toggle" />
-      <span class="slider"></span>
-    </label>
-  </div>
-  <div class="flex items-center space-x-2">
-    <span class="text-sm hidden sm:inline">Enable SMS</span>
-    <label class="toggle-switch">
-      <input type="checkbox" id="sms-toggle" />
-      <span class="slider"></span>
-    </label>
-  </div>
-</div>
-
+          <div class="flex items-center space-x-2">
+            <span class="text-sm hidden sm:inline">Enable Call/Sms</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="call-sms-toggle" unchecked />
+              <span class="slider"></span>
+            </label>
+          </div>
 
           <!-- Logout Button -->
           <button onclick="logout()"
@@ -218,22 +208,12 @@
         </div>
 
         <!-- Mobile Menu Button -->
-       <div class="flex flex-col space-y-2 pt-2 mt-2 border-t border-blue-400">
-  <div class="flex items-center justify-between">
-    <span class="text-white">Enable Call</span>
-    <label class="toggle-switch">
-      <input type="checkbox" id="mobile-call-toggle" />
-      <span class="slider"></span>
-    </label>
-  </div>
-  <div class="flex items-center justify-between">
-    <span class="text-white">Enbale SMS</span>
-    <label class="toggle-switch">
-      <input type="checkbox" id="mobile-sms-toggle" />
-      <span class="slider"></span>
-    </label>
-  </div>
-</div>
+        <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
 
       <!-- Mobile Menu -->
       <div id="mobile-menu" class="hidden md:hidden mt-4 pb-2">
@@ -265,32 +245,19 @@
       mobileMenu.classList.toggle('hidden');
     });
 
-    //  chaned
-  const callToggle = document.getElementById('call-toggle');
-const smsToggle = document.getElementById('sms-toggle');
-const mobileCallToggle = document.getElementById('mobile-call-toggle');
-const mobileSmsToggle = document.getElementById('mobile-sms-toggle');
-
-if (callToggle && mobileCallToggle) {
-  callToggle.addEventListener('change', function() {
-    mobileCallToggle.checked = this.checked;
-  });
-  mobileCallToggle.addEventListener('change', function() {
-    callToggle.checked = this.checked;
-  });
-}
-
-if (smsToggle && mobileSmsToggle) {
-  smsToggle.addEventListener('change', function() {
-    mobileSmsToggle.checked = this.checked;
-  });
-  mobileSmsToggle.addEventListener('change', function() {
-    smsToggle.checked = this.checked;
-  });
-}
-
-
-    // ..........
+    // Sync toggle switches between mobile and desktop
+    const desktopToggle = document.getElementById('call-sms-toggle');
+    const mobileToggle = document.getElementById('mobile-call-sms-toggle');
+    
+    if (desktopToggle && mobileToggle) {
+      desktopToggle.addEventListener('change', function() {
+        mobileToggle.checked = this.checked;
+      });
+      
+      mobileToggle.addEventListener('change', function() {
+        desktopToggle.checked = this.checked;
+      });
+    }
 
     function logout() {
       // Your existing logout functionality
@@ -412,19 +379,6 @@ if (smsToggle && mobileSmsToggle) {
   .animate-slide-down {
     animation: slide-down 0.5s ease-out;
   }
-  @media (max-width: 640px) {
-  .toggle-switch {
-    width: 40px;
-    height: 22px;
-  }
-  .toggle-switch .slider:before {
-    height: 16px;
-    width: 16px;
-  }
-  input:checked + .slider:before {
-    transform: translateX(18px);
-  }
-}
 </style>
 
 
@@ -736,7 +690,7 @@ firebase.initializeApp(firebaseConfig);
       }
 
       async function reverseGeocode(lat, lng) {
-        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+        const url = https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng};
         try {
           const response = await fetch(url);
           const data = await response.json();
@@ -952,8 +906,8 @@ firebase.initializeApp(firebaseConfig);
               window.location.href = "login.html"; // or your login page
             });
           });
-        }
-      }
+        }
+      }
       
     </script>
   </body>
