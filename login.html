@@ -99,7 +99,6 @@
           // Update user status (from old version - important feature)
           firebase.database().ref("users/" + userId).update({
             online: true,
-            lastLogin: firebase.database.ServerValue.TIMESTAMP
           }).then(() => {
             showMessage("Login successful! Redirecting...", "success");
             
