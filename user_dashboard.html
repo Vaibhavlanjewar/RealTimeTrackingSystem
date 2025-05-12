@@ -118,22 +118,7 @@
           height: 50vh;
         }
       }
-      /* Bus alert notification */
-      .bus-alert {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #ff5722;
-        color: white;
-        padding: 15px 25px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        animation: pulse 2s infinite;
-      }
+     
       @keyframes pulse {
         0% {
           transform: translateX(-50%) scale(1);
@@ -145,10 +130,7 @@
           transform: translateX(-50%) scale(1);
         }
       }
-      .bus-alert svg {
-        margin-right: 10px;
-        animation: shake 0.5s infinite alternate;
-      }
+     
       @keyframes shake {
         from {
           transform: rotate(-10deg);
@@ -190,14 +172,24 @@
             </div>
           </div>
 
-          <!-- Alerts Toggle -->
-          <div class="flex items-center space-x-2">
-            <span class="text-sm hidden sm:inline">Enable Call/Sms</span>
-            <label class="toggle-switch">
-              <input type="checkbox" id="call-sms-toggle" unchecked />
-              <span class="slider"></span>
-            </label>
-          </div>
+        <!-- Call Alert Toggle -->
+<div class="flex items-center space-x-2">
+  <span class="text-sm hidden sm:inline">Enable Call</span>
+  <label class="toggle-switch">
+    <input type="checkbox" id="call-toggle" />
+    <span class="slider"></span>
+  </label>
+</div>
+
+<!-- SMS Alert Toggle -->
+<div class="flex items-center space-x-2">
+  <span class="text-sm hidden sm:inline">Enable SMS</span>
+  <label class="toggle-switch">
+    <input type="checkbox" id="sms-toggle" />
+    <span class="slider"></span>
+  </label>
+</div>
+
 
           <!-- Logout Button -->
           <button onclick="logout()"
@@ -208,62 +200,86 @@
         </div>
 
         <!-- Mobile Menu Button -->
-        <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
-      </div>
+<button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"></path>
+  </svg>
+</button>
 
-      <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden md:hidden mt-4 pb-2">
-        <div class="flex flex-col space-y-3">
-          <a href="#about" class="text-white hover:bg-blue-500 px-3 py-2 rounded">About Us</a>
-          <a href="#faq" class="text-white hover:bg-blue-500 px-3 py-2 rounded">FAQ</a>
-          <a href="#contact" class="text-white hover:bg-blue-500 px-3 py-2 rounded">Contact Us</a>
-          <div class="flex items-center justify-between pt-2 mt-2 border-t border-blue-400">
-            <span class="text-white">Enable Call/Sms</span>
-            <label class="toggle-switch">
-              <input type="checkbox" id="mobile-call-sms-toggle" unchecked />
-              <span class="slider"></span>
-            </label>
-          </div>
-          <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md text-white mt-2">
-            Logout
-          </button>
-        </div>
-      </div>
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 bg-blue-800 rounded-lg shadow-md">
+  <div class="flex flex-col space-y-3 px-4 pt-4">
+    <a href="#about" class="text-white hover:bg-blue-600 px-3 py-2 rounded">About Us</a>
+    <a href="#faq" class="text-white hover:bg-blue-600 px-3 py-2 rounded">FAQ</a>
+    <a href="#contact" class="text-white hover:bg-blue-600 px-3 py-2 rounded">Contact Us</a>
+
+    <div class="flex items-center justify-between pt-3 mt-3 border-t border-blue-400">
+      <span class="text-white">Enable Call</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="mobile-call-toggle" />
+        <span class="slider"></span>
+      </label>
     </div>
+
+    <div class="flex items-center justify-between mt-2">
+      <span class="text-white">Enable SMS</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="mobile-sms-toggle" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md text-white mt-4">
+      Logout
+    </button>
+  </div>
+</div>
+
   
-      <!-- Dropdown Toggle Script -->
       <script>
-         // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuButton.addEventListener('click', function() {
-      mobileMenu.classList.toggle('hidden');
+  // Mobile menu toggle
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileMenuButton.addEventListener('click', function () {
+    mobileMenu.classList.toggle('hidden');
+  });
+
+  // Sync toggle switches between mobile and desktop
+  const desktopCallToggle = document.getElementById('call-toggle');
+  const desktopSMSToggle = document.getElementById('sms-toggle');
+  const mobileCallToggle = document.getElementById('mobile-call-toggle');
+  const mobileSMSToggle = document.getElementById('mobile-sms-toggle');
+
+  // Sync Call toggle
+  if (desktopCallToggle && mobileCallToggle) {
+    desktopCallToggle.addEventListener('change', function () {
+      mobileCallToggle.checked = this.checked;
     });
 
-    // Sync toggle switches between mobile and desktop
-    const desktopToggle = document.getElementById('call-sms-toggle');
-    const mobileToggle = document.getElementById('mobile-call-sms-toggle');
-    
-    if (desktopToggle && mobileToggle) {
-      desktopToggle.addEventListener('change', function() {
-        mobileToggle.checked = this.checked;
-      });
-      
-      mobileToggle.addEventListener('change', function() {
-        desktopToggle.checked = this.checked;
-      });
-    }
+    mobileCallToggle.addEventListener('change', function () {
+      desktopCallToggle.checked = this.checked;
+    });
+  }
 
-    function logout() {
-      // Your existing logout functionality
-      console.log('Logout clicked');
-    }
-      </script>
+  // Sync SMS toggle
+  if (desktopSMSToggle && mobileSMSToggle) {
+    desktopSMSToggle.addEventListener('change', function () {
+      mobileSMSToggle.checked = this.checked;
+    });
+
+    mobileSMSToggle.addEventListener('change', function () {
+      desktopSMSToggle.checked = this.checked;
+    });
+  }
+
+  function logout() {
+    // Your existing logout functionality
+    console.log('Logout clicked');
+  }
+</script>
+
     </nav>
 
     <!-- Navbar end -->
@@ -305,63 +321,10 @@
     </div>
   </div>
 </div>
-<!-- Bus Alert Notification (Improved & Top Positioned) -->
-<div
-  id="busAlert"
-  class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-yellow-100 border border-yellow-400 text-yellow-900 px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 hidden z-50 animate-slide-down w-auto max-w-md"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    class="h-8 w-8 text-yellow-600 animate-bounce"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
-    />
-  </svg>
-  <div class="flex-grow">
-    <p class="text-base font-semibold">🚌 BUS IS COMING!</p>
-    <p class="text-sm">The vehicle is nearby and arriving soon.</p>
-  </div>
-  <button onclick="hideBusAlert()" class="text-yellow-800 hover:text-yellow-600 text-lg">&times;</button>
-</div>
 
-<!-- Audio for bus alert -->
-<audio id="busAlertSound" preload="auto">
-  <source
-    src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3"
-    type="audio/mpeg"
-  />
-</audio>
 
-<!-- JS Logic -->
-<script>
-  function showBusAlert() {
-    const alertBox = document.getElementById("busAlert");
-    const alertSound = document.getElementById("busAlertSound");
 
-    alertBox.classList.remove("hidden");
-    alertSound.play();
 
-    setTimeout(() => {
-      hideBusAlert();
-    }, 10000); // auto-hide in 10s
-  }
-
-  function hideBusAlert() {
-    document.getElementById("busAlert").classList.add("hidden");
-  }
-
-  // TEMP: Simulate alert (remove later)
-  setTimeout(() => {
-    showBusAlert();
-  }, 5000);
-</script>
 
 <!-- Slide-down animation -->
 <style>
@@ -395,7 +358,6 @@
     <div class="mt-6">
       <ul class="list-disc pl-6 text-gray-700 space-y-3 text-lg">
         <li><strong>Time Optimization:</strong> Accurate ETAs to plan your journey better.</li>
-        <li><strong>Fuel Efficiency:</strong> Optimized routes help reduce fuel waste.</li>
         <li><strong>Attendance:</strong> Ensures you reach on time for classes and events.</li>
         <li><strong>Smart Alerts:</strong> Instant updates via SMS or Call for approaching buses.</li>
       </ul>
@@ -447,7 +409,7 @@
           <span class="text-2xl">+</span>
         </button>
         <p class="faq-answer hidden mt-3 text-gray-700 text-lg">
-          You’ll automatically receive a Call or SMS when the bus is within 2 km of your location (if enabled).
+          You’ll automatically receive a Call or SMS when the bus is within 300 m of your location (if enabled).
         </p>
       </div>
       <!-- Q4 -->
@@ -457,7 +419,7 @@
           <span class="text-2xl">+</span>
         </button>
         <p class="faq-answer hidden mt-3 text-gray-700 text-lg">
-          No, the system currently supports tracking only one assigned bus per user at a time.
+          No, the system currently supports tracking only one assigned bus at a time.
         </p>
       </div>
     </div>
@@ -524,77 +486,109 @@
 
 
 
-    <script>
-      // Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyCPoo_6Y-XB69FM_qrIjErVADmnaZeG3-4",
-  authDomain: "real-time-vehicle-tracki-a83e6.firebaseapp.com",
-  databaseURL: "https://real-time-vehicle-tracki-a83e6-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "real-time-vehicle-tracki-a83e6",
-  storageBucket: "real-time-vehicle-tracki-a83e6.appspot.com",
-  messagingSenderId: "665050789863",
-  appId: "1:665050789863:web:719d1311c6a71ed1c16f42"
-};
-firebase.initializeApp(firebaseConfig);
+  <script>
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCPoo_6Y-XB69FM_qrIjErVADmnaZeG3-4",
+    authDomain: "real-time-vehicle-tracki-a83e6.firebaseapp.com",
+    databaseURL: "https://real-time-vehicle-tracki-a83e6-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "real-time-vehicle-tracki-a83e6",
+    storageBucket: "real-time-vehicle-tracki-a83e6.appspot.com",
+    messagingSenderId: "665050789863",
+    appId: "1:665050789863:web:719d1311c6a71ed1c16f42"
+  };
+  firebase.initializeApp(firebaseConfig);
 
-       // firebase enable-call/sms alert on both mobail anddesktop view 
- firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    const userId = user.uid;
-    const desktopToggle = document.getElementById("call-sms-toggle");
-    const mobileToggle = document.getElementById("mobile-call-sms-toggle");
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      const userId = user.uid;
 
-    // Disable toggles until Firebase data is loaded
-    if (desktopToggle) desktopToggle.disabled = true;
-    if (mobileToggle) mobileToggle.disabled = true;
+      // Toggle elements (Corrected to match HTML IDs)
+      const desktopCallToggle = document.getElementById("call-toggle");  // Corrected ID
+      const desktopSMSToggle = document.getElementById("sms-toggle");
+      const mobileCallToggle = document.getElementById("mobile-call-toggle");  // Corrected ID
+      const mobileSMSToggle = document.getElementById("mobile-sms-toggle");
 
-    // Get user's current toggle value from DB
-    firebase.database().ref("users/" + userId + "/call_sms_enabled").once("value")
-      .then(snapshot => {
-        const isEnabled = snapshot.val() === true;
-        if (desktopToggle) {
-          desktopToggle.checked = isEnabled;
-          desktopToggle.disabled = false;
+      // Disable all toggles initially
+      if (desktopCallToggle) desktopCallToggle.disabled = true;
+      if (mobileCallToggle) mobileCallToggle.disabled = true;
+      if (desktopSMSToggle) desktopSMSToggle.disabled = true;
+      if (mobileSMSToggle) mobileSMSToggle.disabled = true;
+
+      // Fetch values from DB
+      firebase.database().ref("users/" + userId).once("value").then(snapshot => {
+        const data = snapshot.val() || {};
+
+        const callEnabled = data.enable_call === true;
+        const smsEnabled = data.enable_sms === true;
+
+        // Set and enable toggles
+        if (desktopCallToggle) {
+          desktopCallToggle.checked = callEnabled;
+          desktopCallToggle.disabled = false;
         }
-        if (mobileToggle) {
-          mobileToggle.checked = isEnabled;
-          mobileToggle.disabled = false;
+        if (mobileCallToggle) {
+          mobileCallToggle.checked = callEnabled;
+          mobileCallToggle.disabled = false;
+        }
+        if (desktopSMSToggle) {
+          desktopSMSToggle.checked = smsEnabled;
+          desktopSMSToggle.disabled = false;
+        }
+        if (mobileSMSToggle) {
+          mobileSMSToggle.checked = smsEnabled;
+          mobileSMSToggle.disabled = false;
         }
       });
 
-    // Sync toggles with each other
-    if (desktopToggle && mobileToggle) {
-      desktopToggle.addEventListener("change", function () {
-        const isEnabled = this.checked;
-        mobileToggle.checked = isEnabled;
-        updateToggleState(userId, isEnabled);
-      });
+      // Sync Call toggles
+      if (desktopCallToggle && mobileCallToggle) {
+        desktopCallToggle.addEventListener("change", function () {
+          const isEnabled = this.checked;
+          mobileCallToggle.checked = isEnabled;
+          updateFirebaseToggle(userId, "enable_call", isEnabled);  // Key for call
+        });
 
-      mobileToggle.addEventListener("change", function () {
-        const isEnabled = this.checked;
-        desktopToggle.checked = isEnabled;
-        updateToggleState(userId, isEnabled);
+        mobileCallToggle.addEventListener("change", function () {
+          const isEnabled = this.checked;
+          desktopCallToggle.checked = isEnabled;
+          updateFirebaseToggle(userId, "enable_call", isEnabled);  // Key for call
+        });
+      }
+
+      // Sync SMS toggles
+      if (desktopSMSToggle && mobileSMSToggle) {
+        desktopSMSToggle.addEventListener("change", function () {
+          const isEnabled = this.checked;
+          mobileSMSToggle.checked = isEnabled;
+          updateFirebaseToggle(userId, "enable_sms", isEnabled);  // Key for SMS
+        });
+
+        mobileSMSToggle.addEventListener("change", function () {
+          const isEnabled = this.checked;
+          desktopSMSToggle.checked = isEnabled;
+          updateFirebaseToggle(userId, "enable_sms", isEnabled);  // Key for SMS
+        });
+      }
+
+      function updateFirebaseToggle(userId, key, value) {
+        firebase.database().ref("users/" + userId).update({
+          [key]: value
+        });
+
+        showAlert(
+          ${key === "enable_call" ? "Call" : "SMS"} Alerts ${value ? "enabled" : "disabled"},
+          value ? "success" : "warning"
+        );
+      }
+
+      // Online tracking
+      firebase.database().ref("users/" + userId + "/online").set(true);
+      window.addEventListener("beforeunload", function () {
+        firebase.database().ref("users/" + userId + "/online").set(false);
       });
     }
-
-    function updateToggleState(userId, isEnabled) {
-      firebase.database().ref("users/" + userId).update({
-        call_sms_enabled: isEnabled
-      });
-
-      showAlert(
-        isEnabled ? "Call/SMS Alerts enabled" : "Call/SMS Alerts disabled",
-        isEnabled ? "success" : "warning"
-      );
-    }
-
-    // Online status tracking
-    firebase.database().ref("users/" + userId + "/online").set(true);
-    window.addEventListener("beforeunload", function () {
-      firebase.database().ref("users/" + userId + "/online").set(false);
-    });
-  }
-});
+  });
 
       const db = firebase.database();
       const vehicleRef = db.ref("vehicle/gps");
@@ -603,8 +597,7 @@ firebase.initializeApp(firebaseConfig);
         userLat,
         userLng,
         vehicleMarker,
-        line,
-        alertTriggered = false;
+        line;
 
       // Initialize map with default view
       map = L.map("map").setView([0, 0], 15);
@@ -806,176 +799,49 @@ firebase.initializeApp(firebaseConfig);
           const statusElement = document.querySelector(".h-2.5");
           if (distance < 2) {
             statusElement.classList.remove("bg-yellow-500");
-<!DOCTYPE html> 
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Signup - Live SGGS Vehicle Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .gradient-bg {
-      background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
-    }
-  </style>
-</head>
-<body class="min-h-screen bg-gray-100">
-
-  <!-- Navbar -->
-  <nav class="gradient-bg text-white shadow-lg">
-    <div class="container mx-auto px-4 py-3">
-      <div class="flex items-center space-x-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-        <span class="text-xl font-bold">SGGS Vehicle Tracker</span>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Signup Form -->
-  <div class="container mx-auto px-4 py-8 flex items-center justify-center">
-    <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-sm">
-      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Create an Account</h2>
-
-      <div class="space-y-4">
-        <div>
-          <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-          <input type="text" id="name" placeholder="John Doe"
-                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
-        </div>
-
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-          <input type="email" id="email" placeholder="example@mail.com"
-                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
-        </div>
-
-        <div>
-          <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-          <input type="text" id="phone" placeholder="Phone Number"
-                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required />
-        </div>
-        
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-          <input type="password" id="password" placeholder="••••••••"
-                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
-        </div>
-
-        <div>
-          <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-          <input type="password" id="confirm-password" placeholder="••••••••"
-                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
-        </div>
-      </div>
-
-      <button onclick="signUp()"
-        class="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-blue-600 hover:to-green-600 hover:scale-105 text-white font-semibold py-3 mt-6 rounded-md transition duration-300 transform shadow-lg">
-        Sign Up
-      </button>
-
-      <div class="text-center mt-4 text-sm text-gray-600">
-        Already have an account? <a href="login.html" class="text-blue-600 hover:underline font-medium">Login</a>
-      </div>
-
-      <div id="message" class="hidden mt-4 text-sm font-medium text-white px-4 py-3 rounded-md text-center"></div>
-    </div>
-  </div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-  <!-- Firebase config -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCPoo_6Y-XB69FM_qrIjErVADmnaZeG3-4",
-      authDomain: "real-time-vehicle-tracki-a83e6.firebaseapp.com",
-      databaseURL: "https://real-time-vehicle-tracki-a83e6-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "real-time-vehicle-tracki-a83e6",
-      storageBucket: "real-time-vehicle-tracki-a83e6.appspot.com",
-      messagingSenderId: "665050789863",
-      appId: "1:665050789863:web:719d1311c6a71ed1c16f42"
-    };
-    firebase.initializeApp(firebaseConfig);
-  </script>
-
-  <!-- Signup Logic -->
-  <script>
-    function signUp() {
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirm-password").value;
-      const phone = document.getElementById("phone").value;
-
-      if (!name || !email || !password || !confirmPassword || !phone) {
-        showMessage("Please fill all fields", "error");
-        return;
+            statusElement.classList.add("bg-green-500");
+            document.querySelector(".h-2.5 + span").textContent =
+              "Vehicle nearby";
+          } else {
+            statusElement.classList.remove("bg-green-500");
+            statusElement.classList.add("bg-yellow-500");
+            document.querySelector(".h-2.5 + span").textContent =
+              "Vehicle in transit";
+          }
+        });
       }
 
-      if (password !== confirmPassword) {
-        showMessage("Passwords do not match", "error");
-        return;
+      function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        const R = 6371; // Radius of the Earth in km
+        const dLat = ((lat2 - lat1) * Math.PI) / 180;
+        const dLon = ((lon2 - lon1) * Math.PI) / 180;
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos((lat1 * Math.PI) / 180) *
+            Math.cos((lat2 * Math.PI) / 180) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Distance in km
       }
 
-      navigator.geolocation.getCurrentPosition(
-        function(position) {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          createUserAccount(name, email, password, phone, lat, lng);
-        },
-        function(error) {
-          showMessage("Location access is required. Please enable location services.", "error");
+  
+      function logout() {
+        const user = firebase.auth().currentUser;
+        if (user) {
+          const userId = user.uid;
+          firebase.database().ref('users/' + userId).update({ 
+            online: false,
+            notified1: false,
+            notified2: false
+          })
+          .then(() => {
+            firebase.auth().signOut().then(() => {
+              window.location.href = "login.html"; // or your login page
+            });
+          });
         }
-      );
-    }
-
-   function createUserAccount(name, email, password, phone, lat, lng) {
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      const userId = userCredential.user.uid;
-
-      firebase.database().ref('users/' + userId).set({
-        name: name,
-        email: email,
-        phone: phone,
-        location: {
-          lat: lat,
-          lng: lng
-        },
-        call_enabled: false,
-        notified: false,
-        online: false
-      }).then(() => {
-        showMessage("Signup successful! Redirecting to login...", "success");
-        setTimeout(() => {
-          window.location.href = "login.html";
-        }, 1500);
-      }).catch((error) => {
-        showMessage("Database error: " + error.message, "error");
-      });
-    })
-    .catch((error) => {
-      showMessage("Authentication error: " + error.message, "error");
-    });
-}
-
-    function showMessage(message, type) {
-      const messageEl = document.getElementById("message");
-      messageEl.textContent = message;
-      messageEl.className = `mt-4 text-sm font-medium text-white px-4 py-3 rounded-md text-center ${
-        type === "error" ? "bg-red-500" : "bg-green-600"
-      }`;
-      messageEl.style.display = "block";
-
-      setTimeout(() => {
-        messageEl.style.display = "none";
-      }, 5000);
-    }
-  </script>
-</body>
+      }
+    </script>
+  </body>
 </html>
