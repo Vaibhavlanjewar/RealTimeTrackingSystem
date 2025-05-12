@@ -577,7 +577,7 @@
         });
 
         showAlert(
-          ${key === "enable_call" ? "Call" : "SMS"} Alerts ${value ? "enabled" : "disabled"},
+          `${key === "enable_call" ? "Call" : "SMS"} Alerts ${value ? "enabled" : "disabled"}`,
           value ? "success" : "warning"
         );
       }
@@ -683,7 +683,7 @@
       }
 
       async function reverseGeocode(lat, lng) {
-        const url = https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng};
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
         try {
           const response = await fetch(url);
           const data = await response.json();
@@ -840,8 +840,8 @@
               window.location.href = "login.html"; // or your login page
             });
           });
-        }
-      }
+        }
+      }
     </script>
   </body>
 </html>
