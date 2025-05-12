@@ -126,36 +126,34 @@
       );
     }
 
-    function createUserAccount(name, email, password, phone, lat, lng) {
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const userId = userCredential.user.uid;
+   function createUserAccount(name, email, password, phone, lat, lng) {
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const userId = userCredential.user.uid;
 
-          firebase.database().ref('users/' + userId).set({
-            name: name,
-            email: email,
-            phone: phone,
-            location: {
-              lat: lat,
-              lng: lng
-            },
-            call_enabled: false,
-            notified: false,
-            online: false
-          }).then(() => {
-            showMessage("Signup successful! Redirecting to login...", "success");
-            setTimeout(() => {
-              window.location.href = "login.html";
-            }, 1500);
-          }).catch((error) => {
-            showMessage("Database error: " + error.message, "error");
-          });
-        })
-        .catch((error) => {
-          showMessage("Authentication error: " + error.message, "error");
-        });
-    }
-
+      firebase.database().ref('users/' + userId).set({
+        name: name,
+        email: email,
+        phone: phone,
+        location: {
+          lat: lat,
+          lng: lng
+        },
+        notified: false,
+        online: false
+      }).then(() => {
+        showMessage("Signup successful! Redirecting to login...", "success");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1500);
+      }).catch((error) => {
+        showMessage("Database error: " + error.message, "error");
+      });
+    })
+    .catch((error) => {
+      showMessage("Authentication error: " + error.message, "error");
+    });
+}
     function showMessage(message, type) {
       const messageEl = document.getElementById("message");
       messageEl.textContent = message;
