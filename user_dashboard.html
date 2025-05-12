@@ -192,7 +192,7 @@
 
           <!-- Alerts Toggle -->
           <div class="flex items-center space-x-2">
-            <span class="text-sm hidden sm:inline">Enable Call/Sms</span>
+            <span class="text-sm hidden sm:inline">Enable Call</span>
             <label class="toggle-switch">
               <input type="checkbox" id="call-sms-toggle" unchecked />
               <span class="slider"></span>
@@ -222,7 +222,7 @@
           <a href="#faq" class="text-white hover:bg-blue-500 px-3 py-2 rounded">FAQ</a>
           <a href="#contact" class="text-white hover:bg-blue-500 px-3 py-2 rounded">Contact Us</a>
           <div class="flex items-center justify-between pt-2 mt-2 border-t border-blue-400">
-            <span class="text-white">Enable Call/Sms</span>
+            <span class="text-white">Enable Call</span>
             <label class="toggle-switch">
               <input type="checkbox" id="mobile-call-sms-toggle" unchecked />
               <span class="slider"></span>
@@ -549,7 +549,7 @@ firebase.initializeApp(firebaseConfig);
     if (mobileToggle) mobileToggle.disabled = true;
 
     // Get user's current toggle value from DB
-    firebase.database().ref("users/" + userId + "/call_sms_enabled").once("value")
+    firebase.database().ref("users/" + userId + "/call_enabled").once("value")
       .then(snapshot => {
         const isEnabled = snapshot.val() === true;
         if (desktopToggle) {
@@ -579,11 +579,11 @@ firebase.initializeApp(firebaseConfig);
 
     function updateToggleState(userId, isEnabled) {
       firebase.database().ref("users/" + userId).update({
-        call_sms_enabled: isEnabled
+        call_enabled: isEnabled
       });
 
       showAlert(
-        isEnabled ? "Call/SMS Alerts enabled" : "Call/SMS Alerts disabled",
+        isEnabled ? "Call/SMS Alerts enabled" : "Call Alerts disabled",
         isEnabled ? "success" : "warning"
       );
     }
