@@ -139,6 +139,7 @@
           lat: lat,
           lng: lng
         },
+        call_enabled: false,
         notified: false,
         online: false
       }).then(() => {
@@ -154,6 +155,7 @@
       showMessage("Authentication error: " + error.message, "error");
     });
 }
+
     function showMessage(message, type) {
       const messageEl = document.getElementById("message");
       messageEl.textContent = message;
