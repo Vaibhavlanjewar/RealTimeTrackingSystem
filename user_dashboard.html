@@ -806,109 +806,176 @@ firebase.initializeApp(firebaseConfig);
           const statusElement = document.querySelector(".h-2.5");
           if (distance < 2) {
             statusElement.classList.remove("bg-yellow-500");
-            statusElement.classList.add("bg-green-500");
-            document.querySelector(".h-2.5 + span").textContent =
-              "Vehicle nearby";
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup - Live SGGS Vehicle Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .gradient-bg {
+      background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-100">
 
-            if (distance < 0.5 && !alertTriggered) {
-              triggerBusAlert();
-              alertTriggered = true;
-            }
-          } else {
-            statusElement.classList.remove("bg-green-500");
-            statusElement.classList.add("bg-yellow-500");
-            document.querySelector(".h-2.5 + span").textContent =
-              "Vehicle in transit";
+  <!-- Navbar -->
+  <nav class="gradient-bg text-white shadow-lg">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span class="text-xl font-bold">SGGS Vehicle Tracker</span>
+      </div>
+    </div>
+  </nav>
 
-            // Hide alert if vehicle moves away
-            if (alertTriggered) {
-              hideBusAlert();
-              alertTriggered = false;
-            }
-          }
-        });
+  <!-- Signup Form -->
+  <div class="container mx-auto px-4 py-8 flex items-center justify-center">
+    <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-sm">
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Create an Account</h2>
+
+      <div class="space-y-4">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+          <input type="text" id="name" placeholder="John Doe"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input type="email" id="email" placeholder="example@mail.com"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
+        </div>
+
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+          <input type="text" id="phone" placeholder="Phone Number"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required />
+        </div>
+        
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+          <input type="password" id="password" placeholder="••••••••"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
+        </div>
+
+        <div>
+          <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+          <input type="password" id="confirm-password" placeholder="••••••••"
+                 class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" required />
+        </div>
+      </div>
+
+      <button onclick="signUp()"
+        class="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-blue-600 hover:to-green-600 hover:scale-105 text-white font-semibold py-3 mt-6 rounded-md transition duration-300 transform shadow-lg">
+        Sign Up
+      </button>
+
+      <div class="text-center mt-4 text-sm text-gray-600">
+        Already have an account? <a href="login.html" class="text-blue-600 hover:underline font-medium">Login</a>
+      </div>
+
+      <div id="message" class="hidden mt-4 text-sm font-medium text-white px-4 py-3 rounded-md text-center"></div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- Firebase config -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCPoo_6Y-XB69FM_qrIjErVADmnaZeG3-4",
+      authDomain: "real-time-vehicle-tracki-a83e6.firebaseapp.com",
+      databaseURL: "https://real-time-vehicle-tracki-a83e6-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "real-time-vehicle-tracki-a83e6",
+      storageBucket: "real-time-vehicle-tracki-a83e6.appspot.com",
+      messagingSenderId: "665050789863",
+      appId: "1:665050789863:web:719d1311c6a71ed1c16f42"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <!-- Signup Logic -->
+  <script>
+    function signUp() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm-password").value;
+      const phone = document.getElementById("phone").value;
+
+      if (!name || !email || !password || !confirmPassword || !phone) {
+        showMessage("Please fill all fields", "error");
+        return;
       }
 
-      function triggerBusAlert() {
-        // Show visual alert
-        busAlert.classList.remove("hidden");
+      if (password !== confirmPassword) {
+        showMessage("Passwords do not match", "error");
+        return;
+      }
 
-        // Play sound if alerts are enabled
-        if (document.getElementById("call-sms-toggle").checked) {
-          busAlertSound
-            .play()
-            .catch((e) => console.log("Audio play failed:", e));
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          createUserAccount(name, email, password, phone, lat, lng);
+        },
+        function(error) {
+          showMessage("Location access is required. Please enable location services.", "error");
         }
+      );
+    }
 
-        // Also use speech synthesis
-        if (
-          "speechSynthesis" in window &&
-          document.getElementById("call-sms-toggle").checked
-        ) {
-          const utterance = new SpeechSynthesisUtterance(
-            "Bus is arriving soon"
-          );
-          window.speechSynthesis.speak(utterance);
-        }
+   function createUserAccount(name, email, password, phone, lat, lng) {
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const userId = userCredential.user.uid;
 
-        // Auto-hide after 30 seconds
-        clearTimeout(alertTimeout);
-        alertTimeout = setTimeout(hideBusAlert, 30000);
-      }
-
-      function hideBusAlert() {
-        busAlert.classList.add("hidden");
-        busAlertSound.pause();
-        busAlertSound.currentTime = 0;
-      }
-
-      function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-        const R = 6371; // Radius of the Earth in km
-        const dLat = ((lat2 - lat1) * Math.PI) / 180;
-        const dLon = ((lon2 - lon1) * Math.PI) / 180;
-        const a =
-          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos((lat1 * Math.PI) / 180) *
-            Math.cos((lat2 * Math.PI) / 180) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c; // Distance in km
-      }
-
-      function showAlert(message, type) {
-        const alertDiv = document.createElement("div");
-        alertDiv.className = `fixed top-4 right-4 px-4 py-2 rounded-md shadow-lg text-white ${
-          type === "error"
-            ? "bg-red-500"
-            : type === "success"
-            ? "bg-green-500"
-            : "bg-blue-500"
-        }`;
-        alertDiv.textContent = message;
-        document.body.appendChild(alertDiv);
-
+      firebase.database().ref('users/' + userId).set({
+        name: name,
+        email: email,
+        phone: phone,
+        location: {
+          lat: lat,
+          lng: lng
+        },
+        call_enabled: false,
+        notified: false,
+        online: false
+      }).then(() => {
+        showMessage("Signup successful! Redirecting to login...", "success");
         setTimeout(() => {
-          alertDiv.remove();
-        }, 3000);
-      }
+          window.location.href = "login.html";
+        }, 1500);
+      }).catch((error) => {
+        showMessage("Database error: " + error.message, "error");
+      });
+    })
+    .catch((error) => {
+      showMessage("Authentication error: " + error.message, "error");
+    });
+}
 
-      function logout() {
-        const user = firebase.auth().currentUser;
-        if (user) {
-          const userId = user.uid;
-          firebase.database().ref('users/' + userId).update({ 
-            online: false,
-            notified: false
-          })
-          .then(() => {
-            firebase.auth().signOut().then(() => {
-              window.location.href = "login.html"; // or your login page
-            });
-          });
-        }
-      }
-      
-    </script>
-  </body>
+    function showMessage(message, type) {
+      const messageEl = document.getElementById("message");
+      messageEl.textContent = message;
+      messageEl.className = `mt-4 text-sm font-medium text-white px-4 py-3 rounded-md text-center ${
+        type === "error" ? "bg-red-500" : "bg-green-600"
+      }`;
+      messageEl.style.display = "block";
+
+      setTimeout(() => {
+        messageEl.style.display = "none";
+      }, 5000);
+    }
+  </script>
+</body>
 </html>
