@@ -35,3 +35,6 @@ This project enables users to view real-time locations of vehicles through a web
    git clone https://github.com/Vaibhavlanjewar/RealTimeTrackingSystem.git
    cd RealTimeTrackingSystem
 ##
+
+![image](https://github.com/user-attachments/assets/0e225fe3-57f4-4378-9c97-9347991dbb81)
+
